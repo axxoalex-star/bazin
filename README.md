@@ -39,6 +39,7 @@
 ```
 bazin/
 ├── index.php           # Main landing page (PHP with form processing)
+├── preview.html        # Static preview for GitHub Pages (no PHP)
 ├── css/
 │   └── style.css      # Premium stylesheet (aquatic theme)
 ├── js/
@@ -68,6 +69,8 @@ bazin/
    - For testing, use a mail catcher like Mailhog
 
 5. **Open in browser**: `http://localhost/bazin/`
+
+> For static hosting (e.g., GitHub Pages), use `preview.html`, which mirrors the landing page without PHP form handling.
 
 ### Local Development
 
