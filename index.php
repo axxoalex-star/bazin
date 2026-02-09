@@ -1,0 +1,1071 @@
+<?php
+/**
+ * Bazinul de Înot Bacău - Landing Page
+ * One-page responsive website with premium UI features
+ */
+
+// Initialize variables
+$formSubmitted = false;
+$formSuccess = false;
+$formErrors = [];
+$formData = [
+    'name' => '',
+    'email' => '',
+    'phone' => '',
+    'message' => ''
+];
+
+// Process contact form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
+    $formSubmitted = true;
+    
+    // Sanitize and validate inputs
+    $formData['name'] = trim(htmlspecialchars($_POST['name'] ?? ''));
+    $formData['email'] = trim(htmlspecialchars($_POST['email'] ?? ''));
+    $formData['phone'] = trim(htmlspecialchars($_POST['phone'] ?? ''));
+    $formData['message'] = trim(htmlspecialchars($_POST['message'] ?? ''));
+    
+    // Validation rules
+    if (empty($formData['name']) || strlen($formData['name']) < 2) {
+        $formErrors[] = 'Numele trebuie să conțină cel puțin 2 caractere.';
+    }
+    
+    if (empty($formData['email']) || !filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) {
+        $formErrors[] = 'Vă rugăm să introduceți o adresă de email validă.';
+    }
+    
+    if (empty($formData['phone']) || !preg_match('/^[0-9\s\+\-\(\)]{10,}$/', $formData['phone'])) {
+        $formErrors[] = 'Vă rugăm să introduceți un număr de telefon valid.';
+    }
+    
+    if (empty($formData['message']) || strlen($formData['message']) < 10) {
+        $formErrors[] = 'Mesajul trebuie să conțină cel puțin 10 caractere.';
+    }
+    
+    // If no errors, send email
+    if (empty($formErrors)) {
+        $to = 'contact@bazinbacau.ro'; // Replace with actual email
+        $subject = 'Mesaj nou de pe site - Bazinul de Înot Bacău';
+        $emailMessage = "Nume: {$formData['name']}\n";
+        $emailMessage .= "Email: {$formData['email']}\n";
+        $emailMessage .= "Telefon: {$formData['phone']}\n\n";
+        $emailMessage .= "Mesaj:\n{$formData['message']}\n";
+        
+        $headers = "From: noreply@bazinbacau.ro\r\n";
+        $headers .= "Reply-To: {$formData['email']}\r\n";
+        $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        
+        // Send email (configure mail server for production)
+        if (mail($to, $subject, $emailMessage, $headers)) {
+            $formSuccess = true;
+            // Clear form data on success
+            $formData = ['name' => '', 'email' => '', 'phone' => '', 'message' => ''];
+        } else {
+            $formErrors[] = 'Eroare la trimiterea mesajului. Vă rugăm să încercați mai târziu.';
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bazinul de Înot Bacău - Complex modern de înot cu piscine încălzite, cursuri de înot pentru copii și adulți, abonamente avantajoase.">
+    <meta name="keywords" content="bazin înot Bacău, piscină Bacău, cursuri înot, abonamente înot, lecții înot copii">
+    <title>Bazinul de Înot Bacău - Piscină Modernă | Cursuri & Abonamente</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏊</text></svg>">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Sticky Glassmorphism Header -->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="#hero" class="nav__logo">
+                <i class="fas fa-swimming-pool"></i>
+                <span>Bazinul de Înot Bacău</span>
+            </a>
+            
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item">
+                        <a href="#despre" class="nav__link">
+                            <i class="fas fa-info-circle"></i> Despre
+                        </a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#facilitati" class="nav__link">
+                            <i class="fas fa-star"></i> Facilități
+                        </a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#tarife" class="nav__link">
+                            <i class="fas fa-tags"></i> Tarife
+                        </a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#regulament" class="nav__link">
+                            <i class="fas fa-file-contract"></i> Regulament
+                        </a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#contact" class="nav__link">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </li>
+                </ul>
+                
+                <button class="nav__close" id="nav-close" aria-label="Închide meniu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <button class="nav__toggle" id="nav-toggle" aria-label="Deschide meniu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Mobile Call Button -->
+    <a href="tel:+40234567890" class="mobile-call-btn" aria-label="Sună acum">
+        <i class="fas fa-phone-alt"></i>
+    </a>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero__overlay"></div>
+        <div class="hero__content container">
+            <h1 class="hero__title" data-aos="fade-up">
+                Bazinul de Înot Bacău
+            </h1>
+            <p class="hero__subtitle" data-aos="fade-up" data-aos-delay="100">
+                Complexul tău modern de înot cu piscine încălzite, cursuri profesionale și facilități premium
+            </p>
+            <div class="hero__buttons" data-aos="fade-up" data-aos-delay="200">
+                <a href="#contact" class="btn btn--primary">
+                    <i class="fas fa-calendar-check"></i> Programări Online
+                </a>
+                <a href="tel:+40234567890" class="btn btn--secondary">
+                    <i class="fas fa-phone"></i> Contact Direct
+                </a>
+            </div>
+            
+            <div class="hero__stats" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat">
+                    <i class="fas fa-users"></i>
+                    <div>
+                        <strong>2500+</strong>
+                        <span>Membri Activi</span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-medal"></i>
+                    <div>
+                        <strong>15+</strong>
+                        <span>Ani Experiență</span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-swimming-pool"></i>
+                    <div>
+                        <strong>3</strong>
+                        <span>Piscine Moderne</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scroll-indicator">
+            <a href="#despre" aria-label="Derulează mai jos">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section despre" id="despre">
+        <div class="container">
+            <h2 class="section__title" data-aos="fade-up">
+                <i class="fas fa-info-circle"></i>
+                Despre Noi
+            </h2>
+            <p class="section__subtitle" data-aos="fade-up">
+                Complexul modern de înot din inima Bacăului
+            </p>
+            
+            <div class="despre__content">
+                <div class="despre__text" data-aos="fade-right">
+                    <p>
+                        Bazinul de Înot Bacău este cel mai modern complex acvatic din regiune, 
+                        oferind condiții optime pentru înotul de performanță, recreere și relaxare. 
+                        Cu o experiență de peste 15 ani în domeniu, am antrenat mii de înotători, 
+                        de la copii la sportivi de performanță.
+                    </p>
+                    <p>
+                        Facilităților noastre de ultimă generație includ piscine încălzite, 
+                        vestiare moderne, saună, jacuzzi și o echipă de antrenori profesioniști 
+                        certificați, gata să vă ghideze în fiecare etapă a călătoriei dumneavoastră acvatice.
+                    </p>
+                    <div class="despre__features">
+                        <div class="feature-badge">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Certificat ISO</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Antrenori Certificați</span>
+                        </div>
+                        <div class="feature-badge">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Apă Filtrată UV</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="despre__image" data-aos="fade-left">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230891b2;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2306b6d4;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='600' fill='url(%23grad1)'/%3E%3Cg opacity='0.3'%3E%3Ccircle cx='200' cy='150' r='80' fill='white'/%3E%3Ccircle cx='600' cy='450' r='100' fill='white'/%3E%3Ccircle cx='400' cy='300' r='60' fill='white'/%3E%3C/g%3E%3Ctext x='400' y='300' font-family='Arial' font-size='120' fill='white' text-anchor='middle' opacity='0.5'%3E🏊%3C/text%3E%3C/svg%3E" 
+                         alt="Bazin de înot modern cu piscine încălzite" 
+                         loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facilities Section -->
+    <section class="section facilitati" id="facilitati">
+        <div class="container">
+            <h2 class="section__title" data-aos="fade-up">
+                <i class="fas fa-star"></i>
+                Facilități Premium
+            </h2>
+            <p class="section__subtitle" data-aos="fade-up">
+                Tot ce ai nevoie pentru o experiență completă
+            </p>
+            
+            <div class="facilitati__grid">
+                <!-- Pool facilities -->
+                <div class="facility-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="facility-card__icon">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <h3 class="facility-card__title">Piscină Olimpică</h3>
+                    <p class="facility-card__description">
+                        50m x 25m, 8 culoare, încălzită la 27°C, ideală pentru antrenamente profesionale
+                    </p>
+                </div>
+                
+                <div class="facility-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="facility-card__icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h3 class="facility-card__title">Piscină Copii</h3>
+                    <p class="facility-card__description">
+                        15m x 10m, adâncime variabilă, apă încălzită la 29°C pentru siguranță și confort
+                    </p>
+                </div>
+                
+                <div class="facility-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="facility-card__icon">
+                        <i class="fas fa-hot-tub"></i>
+                    </div>
+                    <h3 class="facility-card__title">Jacuzzi & Saună</h3>
+                    <p class="facility-card__description">
+                        Zone de relaxare cu jacuzzi cu hidromasaj și saună uscată și umedă
+                    </p>
+                </div>
+                
+                <div class="facility-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="facility-card__icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <h3 class="facility-card__title">Sală Fitness</h3>
+                    <p class="facility-card__description">
+                        Echipamente moderne Technogym pentru antrenament uscat complementar
+                    </p>
+                </div>
+                
+                <div class="facility-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="facility-card__icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h3 class="facility-card__title">Vestiare Moderne</h3>
+                    <p class="facility-card__description">
+                        Dușuri cu apă caldă, dulapuri securizate, uscătoare de păr și produse de igienă
+                    </p>
+                </div>
+                
+                <div class="facility-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="facility-card__icon">
+                        <i class="fas fa-parking"></i>
+                    </div>
+                    <h3 class="facility-card__title">Parcare Gratuită</h3>
+                    <p class="facility-card__description">
+                        150 locuri de parcare supravegheat video, inclusiv locuri pentru persoane cu dizabilități
+                    </p>
+                </div>
+                
+                <div class="facility-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="facility-card__icon">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <h3 class="facility-card__title">Cafenea & Bar</h3>
+                    <p class="facility-card__description">
+                        Cafenea cu terasă, smoothie-uri fresh, snack-uri sănătoase și zone de așteptare
+                    </p>
+                </div>
+                
+                <div class="facility-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="facility-card__icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3 class="facility-card__title">Cursuri de Înot</h3>
+                    <p class="facility-card__description">
+                        Lecții private și de grup pentru toate vârstele, de la începători la avansați
+                    </p>
+                </div>
+                
+                <div class="facility-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="facility-card__icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="facility-card__title">Salvamari Certificați</h3>
+                    <p class="facility-card__description">
+                        Echipă de salvamari profesioniști prezentă permanent în timpul programului
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section tarife" id="tarife">
+        <div class="container">
+            <h2 class="section__title" data-aos="fade-up">
+                <i class="fas fa-tags"></i>
+                Tarife & Abonamente
+            </h2>
+            <p class="section__subtitle" data-aos="fade-up">
+                Pachete flexibile pentru toate nevoile tale
+            </p>
+            
+            <!-- Pricing Cards -->
+            <div class="pricing-cards">
+                <div class="pricing-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="pricing-card__badge">Popular</div>
+                    <div class="pricing-card__icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <h3 class="pricing-card__title">Intrare Simplă</h3>
+                    <div class="pricing-card__price">
+                        <span class="currency">Lei</span>
+                        <span class="amount">25</span>
+                        <span class="period">/intrare</span>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li><i class="fas fa-check"></i> Acces piscină olimpică</li>
+                        <li><i class="fas fa-check"></i> Vestiare și dușuri</li>
+                        <li><i class="fas fa-check"></i> Durata: 2 ore</li>
+                        <li><i class="fas fa-check"></i> Valabilitate: 1 zi</li>
+                    </ul>
+                    <a href="#contact" class="pricing-card__btn btn btn--outline">
+                        Cumpără Acum
+                    </a>
+                </div>
+                
+                <div class="pricing-card pricing-card--featured" data-aos="fade-up" data-aos-delay="100">
+                    <div class="pricing-card__badge pricing-card__badge--premium">Recomandat</div>
+                    <div class="pricing-card__icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3 class="pricing-card__title">Abonament Lunar</h3>
+                    <div class="pricing-card__price">
+                        <span class="currency">Lei</span>
+                        <span class="amount">199</span>
+                        <span class="period">/lună</span>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li><i class="fas fa-check"></i> Acces nelimitat toate piscinele</li>
+                        <li><i class="fas fa-check"></i> Saună și jacuzzi incluse</li>
+                        <li><i class="fas fa-check"></i> Sală fitness gratuită</li>
+                        <li><i class="fas fa-check"></i> 10% reducere cafenea</li>
+                        <li><i class="fas fa-check"></i> Program flexibil</li>
+                    </ul>
+                    <a href="#contact" class="pricing-card__btn btn btn--primary">
+                        Abonează-te Acum
+                    </a>
+                </div>
+                
+                <div class="pricing-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="pricing-card__badge">Economie</div>
+                    <div class="pricing-card__icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3 class="pricing-card__title">Abonament Anual</h3>
+                    <div class="pricing-card__price">
+                        <span class="currency">Lei</span>
+                        <span class="amount">1899</span>
+                        <span class="period">/an</span>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li><i class="fas fa-check"></i> Toate beneficiile lunare</li>
+                        <li><i class="fas fa-check"></i> Economisești 500 Lei/an</li>
+                        <li><i class="fas fa-check"></i> 2 invitații guest gratuite</li>
+                        <li><i class="fas fa-check"></i> 20% reducere cursuri înot</li>
+                        <li><i class="fas fa-check"></i> Prioritate la programări</li>
+                    </ul>
+                    <a href="#contact" class="pricing-card__btn btn btn--outline">
+                        Alege Planul Anual
+                    </a>
+                </div>
+                
+                <div class="pricing-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="pricing-card__icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="pricing-card__title">Abonament Familie</h3>
+                    <div class="pricing-card__price">
+                        <span class="currency">Lei</span>
+                        <span class="amount">449</span>
+                        <span class="period">/lună</span>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li><i class="fas fa-check"></i> Pentru 2 adulți + 2 copii</li>
+                        <li><i class="fas fa-check"></i> Acces toate facilităților</li>
+                        <li><i class="fas fa-check"></i> Cursuri copii reducere 30%</li>
+                        <li><i class="fas fa-check"></i> Parcare rezervată</li>
+                    </ul>
+                    <a href="#contact" class="pricing-card__btn btn btn--outline">
+                        Pachete Familie
+                    </a>
+                </div>
+                
+                <div class="pricing-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="pricing-card__icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="pricing-card__title">Cursuri de Înot</h3>
+                    <div class="pricing-card__price">
+                        <span class="currency">Lei</span>
+                        <span class="amount">350</span>
+                        <span class="period">/8 ședințe</span>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li><i class="fas fa-check"></i> Lecții cu antrenor certificat</li>
+                        <li><i class="fas fa-check"></i> Grupuri mici (max 6 persoane)</li>
+                        <li><i class="fas fa-check"></i> Copii și adulți</li>
+                        <li><i class="fas fa-check"></i> Toate nivelurile</li>
+                    </ul>
+                    <a href="#contact" class="pricing-card__btn btn btn--outline">
+                        Înscrie-te la Curs
+                    </a>
+                </div>
+                
+                <div class="pricing-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="pricing-card__icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3 class="pricing-card__title">Lecții Private</h3>
+                    <div class="pricing-card__price">
+                        <span class="currency">Lei</span>
+                        <span class="amount">80</span>
+                        <span class="period">/oră</span>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li><i class="fas fa-check"></i> Atenție personalizată</li>
+                        <li><i class="fas fa-check"></i> Program flexibil</li>
+                        <li><i class="fas fa-check"></i> Progres rapid</li>
+                        <li><i class="fas fa-check"></i> Toate vârstele</li>
+                    </ul>
+                    <a href="#contact" class="pricing-card__btn btn btn--outline">
+                        Rezervă Lecție
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Pricing Table (desktop view) -->
+            <div class="pricing-table-wrapper" data-aos="fade-up">
+                <h3 class="pricing-table__title">Comparație Detaliată Tarife</h3>
+                <div class="pricing-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Serviciu</th>
+                                <th>Preț</th>
+                                <th>Detalii</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Intrare Simplă Adult</strong></td>
+                                <td>25 Lei</td>
+                                <td>2 ore acces piscină</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Intrare Simplă Copil (3-14 ani)</strong></td>
+                                <td>15 Lei</td>
+                                <td>2 ore acces piscină copii</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Intrare Student/Pensionar</strong></td>
+                                <td>20 Lei</td>
+                                <td>Cu dovadă (card/legitimație)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Abonament 8 Intrări</strong></td>
+                                <td>180 Lei</td>
+                                <td>Economie 20 Lei, valabil 60 zile</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Abonament Lunar Standard</strong></td>
+                                <td>199 Lei</td>
+                                <td>Acces nelimitat, toate facilitățile</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Abonament Anual</strong></td>
+                                <td>1899 Lei</td>
+                                <td>Echivalent 158 Lei/lună</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Abonament Familie (2+2)</strong></td>
+                                <td>449 Lei</td>
+                                <td>2 adulți + 2 copii</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Curs Înot Grup (8 ședințe)</strong></td>
+                                <td>350 Lei</td>
+                                <td>Max 6 persoane/grup, 45 min/ședință</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Lecție Privată (1 oră)</strong></td>
+                                <td>80 Lei</td>
+                                <td>Antrenor personal, program flexibil</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Saună (acces separat)</strong></td>
+                                <td>30 Lei</td>
+                                <td>45 minute, inclus în abonamente</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pricing-notes">
+                    <h4><i class="fas fa-info-circle"></i> Note Importante:</h4>
+                    <ul>
+                        <li>Reducere 20% pentru studenți și pensionari la toate abonamentele</li>
+                        <li>Copiii sub 3 ani au acces gratuit (însoțiți de adult cu bilet)</li>
+                        <li>Abonamentele permit acces în orice moment în timpul programului</li>
+                        <li>Cursurile de înot se desfășoară conform programului stabilit cu antrenorul</li>
+                        <li>Prețurile includ TVA și sunt exprimate în Lei (RON)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Regulations Section (Accordion) -->
+    <section class="section regulament" id="regulament">
+        <div class="container">
+            <h2 class="section__title" data-aos="fade-up">
+                <i class="fas fa-file-contract"></i>
+                Regulament Intern
+            </h2>
+            <p class="section__subtitle" data-aos="fade-up">
+                Pentru siguranța și confortul tuturor
+            </p>
+            
+            <div class="accordion" data-aos="fade-up">
+                <!-- Accordion Item 1 -->
+                <div class="accordion__item">
+                    <button class="accordion__header" aria-expanded="false">
+                        <span class="accordion__title">
+                            <i class="fas fa-clock"></i>
+                            Program de Funcționare
+                        </span>
+                        <i class="fas fa-chevron-down accordion__icon"></i>
+                    </button>
+                    <div class="accordion__content">
+                        <div class="accordion__body">
+                            <ul>
+                                <li><strong>Luni - Vineri:</strong> 06:00 - 22:00</li>
+                                <li><strong>Sâmbătă:</strong> 08:00 - 21:00</li>
+                                <li><strong>Duminică:</strong> 08:00 - 20:00</li>
+                                <li><strong>Sărbători legale:</strong> 10:00 - 18:00</li>
+                                <li>Program special pentru cursuri: 14:00 - 19:00 (zilnic)</li>
+                                <li>Ultimul acces: cu 30 minute înainte de închidere</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Accordion Item 2 -->
+                <div class="accordion__item">
+                    <button class="accordion__header" aria-expanded="false">
+                        <span class="accordion__title">
+                            <i class="fas fa-swimmer"></i>
+                            Condiții de Acces
+                        </span>
+                        <i class="fas fa-chevron-down accordion__icon"></i>
+                    </button>
+                    <div class="accordion__content">
+                        <div class="accordion__body">
+                            <ul>
+                                <li>Accesul în complex se face pe bază de bilet/abonament valabil</li>
+                                <li>Este obligatorie prezentarea unui document de identitate la intrare</li>
+                                <li>Copiii sub 14 ani trebuie însoțiți de un adult</li>
+                                <li>Interzis accesul persoanelor cu boli contagioase sau răni deschise</li>
+                                <li>Certificat medical obligatoriu pentru cursurile de performanță</li>
+                                <li>Dotări obligatorii: costum de baie adecvat, șapcă de baie, papuci de cauciuc</li>
+                                <li>Controalele medicale periodice sunt recomandate înotătorilor regulari</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Accordion Item 3 -->
+                <div class="accordion__item">
+                    <button class="accordion__header" aria-expanded="false">
+                        <span class="accordion__title">
+                            <i class="fas fa-shield-alt"></i>
+                            Reguli de Siguranță
+                        </span>
+                        <i class="fas fa-chevron-down accordion__icon"></i>
+                    </button>
+                    <div class="accordion__content">
+                        <div class="accordion__body">
+                            <ul>
+                                <li>Este obligatorie efectuarea dușului înainte de intrarea în piscină</li>
+                                <li>Interzise săriturile în locuri nesemnalizate</li>
+                                <li>Respectați indicațiile salvamarilor și ale personalului</li>
+                                <li>În cazul oricărei urgențe, anunțați imediat salvamarul de serviciu</li>
+                                <li>Copiii trebuie supravegheați permanent de părinți/însoțitori</li>
+                                <li>Interzis accesul cu obiecte din sticlă în zona piscinei</li>
+                                <li>Nu alergați pe marginea piscinei - risc de alunecare</li>
+                                <li>Zona de înot este rezervată exclusiv înotului - nu jocurilor bruște</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Accordion Item 4 -->
+                <div class="accordion__item">
+                    <button class="accordion__header" aria-expanded="false">
+                        <span class="accordion__title">
+                            <i class="fas fa-ban"></i>
+                            Interdicții
+                        </span>
+                        <i class="fas fa-chevron-down accordion__icon"></i>
+                    </button>
+                    <div class="accordion__content">
+                        <div class="accordion__body">
+                            <ul>
+                                <li>Este strict interzis fumatul în întregul complex</li>
+                                <li>Interzis consumul de băuturi alcoolice sau substanțe interzise</li>
+                                <li>Nu este permis accesul cu mâncare sau băuturi în zona piscinei</li>
+                                <li>Interzisă folosirea telefoanelor mobile/camerelor în vestiare</li>
+                                <li>Nu este permisă introducerea animalelor de companie</li>
+                                <li>Interzis comportamentul agresiv, limbajul obscen sau deranjarea celorlalți</li>
+                                <li>Nu părăsiți copiii nesupravegheați în complex</li>
+                                <li>Interzis utilizarea echipamentelor în alt scop decât cel destinat</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Accordion Item 5 -->
+                <div class="accordion__item">
+                    <button class="accordion__header" aria-expanded="false">
+                        <span class="accordion__title">
+                            <i class="fas fa-tshirt"></i>
+                            Vestiare și Dulapuri
+                        </span>
+                        <i class="fas fa-chevron-down accordion__icon"></i>
+                    </button>
+                    <div class="accordion__content">
+                        <div class="accordion__body">
+                            <ul>
+                                <li>Dulapurile se închiriază pe bază de garanție restituibilă (10 Lei)</li>
+                                <li>Păstrați cheia dulapului pe tot parcursul ședinței</li>
+                                <li>Nu lăsați obiecte de valoare în vestiare - folosiți seiful de la recepție</li>
+                                <li>Administratorul nu răspunde de obiectele pierdute/furate</li>
+                                <li>Dulapurile trebuie eliberate la finalul vizitei</li>
+                                <li>Respectați curățenia și intimitatea celorlalți în vestiare</li>
+                                <li>Obiectele uitate vor fi păstrate 30 zile la biroul de obiecte pierdute</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Accordion Item 6 -->
+                <div class="accordion__item">
+                    <button class="accordion__header" aria-expanded="false">
+                        <span class="accordion__title">
+                            <i class="fas fa-handshake"></i>
+                            Drepturi și Obligații
+                        </span>
+                        <i class="fas fa-chevron-down accordion__icon"></i>
+                    </button>
+                    <div class="accordion__content">
+                        <div class="accordion__body">
+                            <h4>Drepturi:</h4>
+                            <ul>
+                                <li>Acces la toate facilitățile incluse în biletul/abonamentul achiziționat</li>
+                                <li>Servicii de calitate și personal calificat la dispoziție</li>
+                                <li>Condiții de igienă și siguranță conform standardelor</li>
+                                <li>Informații corecte despre servicii, tarife și program</li>
+                            </ul>
+                            
+                            <h4>Obligații:</h4>
+                            <ul>
+                                <li>Respectarea întregului regulament intern</li>
+                                <li>Comportament civilizat față de personalul și ceilalți vizitatori</li>
+                                <li>Plata integrală a serviciilor accesate</li>
+                                <li>Raportarea oricăror defecțiuni sau incidente</li>
+                                <li>Păstrarea curățeniei în toate spațiile complexului</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Accordion Item 7 -->
+                <div class="accordion__item">
+                    <button class="accordion__header" aria-expanded="false">
+                        <span class="accordion__title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Sancțiuni
+                        </span>
+                        <i class="fas fa-chevron-down accordion__icon"></i>
+                    </button>
+                    <div class="accordion__content">
+                        <div class="accordion__body">
+                            <ul>
+                                <li>Nerespectarea regulamentului poate duce la suspendarea accesului</li>
+                                <li>Comportament inadecvat: excludere imediată fără restituirea banilor</li>
+                                <li>Deteriorarea bunurilor complexului: obligația de a acoperi daunele</li>
+                                <li>Nerespectarea repetată: anularea abonamentului fără restituire</li>
+                                <li>Încălcări grave: sesizarea autorităților competente</li>
+                                <li>Administratorul își rezervă dreptul de a refuza accesul fără justificare</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="regulament-footer" data-aos="fade-up">
+                <p>
+                    <i class="fas fa-check-circle"></i>
+                    Prin achiziționarea biletului/abonamentului și accesul în complex, 
+                    confirmați că ați luat cunoștință de regulamentul intern și vă angajați să îl respectați.
+                </p>
+                <p class="text-small">
+                    Versiunea curentă: Ianuarie 2024 | 
+                    <a href="#contact">Contact pentru nelămuriri</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section with Form -->
+    <section class="section contact" id="contact">
+        <div class="container">
+            <h2 class="section__title" data-aos="fade-up">
+                <i class="fas fa-envelope"></i>
+                Contactează-ne
+            </h2>
+            <p class="section__subtitle" data-aos="fade-up">
+                Suntem aici pentru tine! Trimite-ne un mesaj
+            </p>
+            
+            <div class="contact__content">
+                <!-- Contact Info -->
+                <div class="contact__info" data-aos="fade-right">
+                    <div class="contact-info-card">
+                        <div class="contact-info-card__icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-info-card__content">
+                            <h3>Adresă</h3>
+                            <p>Str. Sportului nr. 10<br>Bacău, 600123<br>România</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-card">
+                        <div class="contact-info-card__icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-info-card__content">
+                            <h3>Telefon</h3>
+                            <p>
+                                <a href="tel:+40234567890">+40 234 567 890</a><br>
+                                <a href="tel:+40723456789">+40 723 456 789</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-card">
+                        <div class="contact-info-card__icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-info-card__content">
+                            <h3>Email</h3>
+                            <p>
+                                <a href="mailto:contact@bazinbacau.ro">contact@bazinbacau.ro</a><br>
+                                <a href="mailto:info@bazinbacau.ro">info@bazinbacau.ro</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-card">
+                        <div class="contact-info-card__icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-info-card__content">
+                            <h3>Program</h3>
+                            <p>
+                                Luni - Vineri: 06:00 - 22:00<br>
+                                Weekend: 08:00 - 20:00
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div class="contact__form" data-aos="fade-left">
+                    <?php if ($formSuccess): ?>
+                        <div class="alert alert--success" role="alert">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Mesaj trimis cu succes!</strong>
+                                <p>Vă mulțumim pentru mesaj. Vă vom răspunde în cel mai scurt timp posibil.</p>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($formErrors)): ?>
+                        <div class="alert alert--error" role="alert">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <div>
+                                <strong>Eroare la trimiterea formularului:</strong>
+                                <ul>
+                                    <?php foreach ($formErrors as $error): ?>
+                                        <li><?php echo $error; ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <form method="POST" action="#contact" class="form" novalidate>
+                        <div class="form__group">
+                            <label for="name" class="form__label">
+                                <i class="fas fa-user"></i>
+                                Nume Complet *
+                            </label>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                class="form__input <?php echo ($formSubmitted && isset($formErrors[0])) ? 'form__input--error' : ''; ?>"
+                                value="<?php echo htmlspecialchars($formData['name']); ?>"
+                                placeholder="ex: Ion Popescu"
+                                required
+                                aria-required="true">
+                        </div>
+                        
+                        <div class="form__group">
+                            <label for="email" class="form__label">
+                                <i class="fas fa-envelope"></i>
+                                Adresă Email *
+                            </label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                class="form__input"
+                                value="<?php echo htmlspecialchars($formData['email']); ?>"
+                                placeholder="ex: ion.popescu@email.com"
+                                required
+                                aria-required="true">
+                        </div>
+                        
+                        <div class="form__group">
+                            <label for="phone" class="form__label">
+                                <i class="fas fa-phone"></i>
+                                Telefon *
+                            </label>
+                            <input 
+                                type="tel" 
+                                id="phone" 
+                                name="phone" 
+                                class="form__input"
+                                value="<?php echo htmlspecialchars($formData['phone']); ?>"
+                                placeholder="ex: 0723456789"
+                                required
+                                aria-required="true">
+                        </div>
+                        
+                        <div class="form__group">
+                            <label for="message" class="form__label">
+                                <i class="fas fa-comment"></i>
+                                Mesaj *
+                            </label>
+                            <textarea 
+                                id="message" 
+                                name="message" 
+                                class="form__textarea"
+                                rows="5"
+                                placeholder="Scrie-ne mesajul tău aici..."
+                                required
+                                aria-required="true"><?php echo htmlspecialchars($formData['message']); ?></textarea>
+                        </div>
+                        
+                        <button type="submit" name="contact_submit" class="btn btn--primary btn--full">
+                            <i class="fas fa-paper-plane"></i>
+                            Trimite Mesajul
+                        </button>
+                        
+                        <p class="form__note">
+                            <i class="fas fa-info-circle"></i>
+                            Câmpurile marcate cu * sunt obligatorii
+                        </p>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Map -->
+            <div class="map-container" data-aos="fade-up">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d43318.34023119149!2d26.879799999999998!3d46.56718699999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b3e3b6d6e0d8b1%3A0x3c3a3f8b8b8b8b8b!2zQmFjxIN1!5e0!3m2!1sro!2sro!4v1234567890123"
+                    width="100%" 
+                    height="450" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Locația Bazinul de Înot Bacău pe hartă"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__section">
+                    <h3 class="footer__title">
+                        <i class="fas fa-swimming-pool"></i>
+                        Bazinul de Înot Bacău
+                    </h3>
+                    <p class="footer__description">
+                        Complexul tău modern de înot din inima Bacăului. 
+                        Oferim condiții optime pentru înotul de performanță, 
+                        recreere și relaxare de peste 15 ani.
+                    </p>
+                    <div class="footer__social">
+                        <a href="#" class="footer__social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="footer__social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="footer__social-link" aria-label="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#" class="footer__social-link" aria-label="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer__section">
+                    <h4 class="footer__subtitle">Link-uri Rapide</h4>
+                    <ul class="footer__links">
+                        <li><a href="#despre"><i class="fas fa-chevron-right"></i> Despre Noi</a></li>
+                        <li><a href="#facilitati"><i class="fas fa-chevron-right"></i> Facilități</a></li>
+                        <li><a href="#tarife"><i class="fas fa-chevron-right"></i> Tarife</a></li>
+                        <li><a href="#regulament"><i class="fas fa-chevron-right"></i> Regulament</a></li>
+                        <li><a href="#contact"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer__section">
+                    <h4 class="footer__subtitle">Servicii</h4>
+                    <ul class="footer__links">
+                        <li><a href="#tarife"><i class="fas fa-chevron-right"></i> Abonamente</a></li>
+                        <li><a href="#tarife"><i class="fas fa-chevron-right"></i> Cursuri de Înot</a></li>
+                        <li><a href="#tarife"><i class="fas fa-chevron-right"></i> Lecții Private</a></li>
+                        <li><a href="#facilitati"><i class="fas fa-chevron-right"></i> Saună & Jacuzzi</a></li>
+                        <li><a href="#facilitati"><i class="fas fa-chevron-right"></i> Sală Fitness</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer__section">
+                    <h4 class="footer__subtitle">Contact</h4>
+                    <ul class="footer__contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Str. Sportului nr. 10<br>Bacău, 600123</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span><a href="tel:+40234567890">+40 234 567 890</a></span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span><a href="mailto:contact@bazinbacau.ro">contact@bazinbacau.ro</a></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer__bottom">
+                <p class="footer__copyright">
+                    &copy; <?php echo date('Y'); ?> Bazinul de Înot Bacău. Toate drepturile rezervate.
+                </p>
+                <div class="footer__legal">
+                    <a href="#">Termeni și Condiții</a>
+                    <span>|</span>
+                    <a href="#">Politica de Confidențialitate</a>
+                    <span>|</span>
+                    <a href="#">GDPR</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Înapoi sus">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>
