@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
 
     // If no errors, send email
     if (empty($formErrors)) {
-        $to = 'contact@bazinbacau.ro'; // Replace with actual email
+        $to = 'receptie.bazin@primariabacau.ro'; // Actual email updated as requested
         $subject = 'Mesaj nou de pe site - Bazinul de Înot Bacău';
         $emailMessage = "Nume: {$formData['name']}\n";
         $emailMessage .= "Email: {$formData['email']}\n";
@@ -944,6 +944,30 @@ endif; ?>
             </div>
         </div>
     </section>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal <?php echo $formSuccess ? 'modal--show' : ''; ?>" role="dialog" aria-labelledby="modalTitle" aria-hidden="<?php echo $formSuccess ? 'false' : 'true'; ?>">
+        <div class="modal__overlay" id="modalOverlay"></div>
+        <div class="modal__container" data-aos="zoom-in">
+            <button class="modal__close" id="modalClose" aria-label="Închide">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal__content">
+                <div class="modal__icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="modal__title" id="modalTitle">Mesaj Trimis cu Succes!</h2>
+                <p class="modal__text">
+                    Vă mulțumim pentru interesul acordat Bazinului de Înot Bacău. Mesajul dumneavoastră a fost recepționat cu succes.
+                </p>
+                <p class="modal__text">
+                    Echipa noastră va analiza solicitarea și vă va contacta în cel mai scurt timp posibil pentru a vă oferi informațiile necesare.
+                </p>
+                <button class="btn btn--primary btn--modal" id="modalConfirm">Am înțeles</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">

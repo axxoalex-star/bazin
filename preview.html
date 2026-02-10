@@ -823,6 +823,32 @@
         </div>
     </section>
 
+    <!-- Success Modal (Hidden by default in static preview) -->
+    <div id="successModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal__overlay" id="modalOverlay"></div>
+        <div class="modal__container">
+            <button class="modal__close" id="modalClose" aria-label="Închide">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="modal__content">
+                <div class="modal__icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="modal__title" id="modalTitle">Mesaj Trimis cu Succes!</h2>
+                <p class="modal__text">
+                    Vă mulțumim pentru interesul acordat Bazinului de Înot Bacău. Mesajul dumneavoastră a fost
+                    recepționat cu succes.
+                </p>
+                <p class="modal__text">
+                    Echipa noastră va analiza solicitarea și vă va contacta în cel mai scurt timp posibil pentru a vă
+                    oferi informațiile necesare.
+                </p>
+                <button class="btn btn--primary btn--modal" id="modalConfirm">Am înțeles</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">

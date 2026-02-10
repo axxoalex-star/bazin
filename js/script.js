@@ -3,7 +3,7 @@
  * Accordion, smooth scroll, mobile menu, header effects
  */
 
-(function() {
+(function () {
     'use strict';
 
     // ========================================
@@ -40,9 +40,9 @@
 
     // Listen to scroll event with throttle for performance
     let scrollTimeout;
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         if (!scrollTimeout) {
-            scrollTimeout = setTimeout(function() {
+            scrollTimeout = setTimeout(function () {
                 handleScroll();
                 scrollTimeout = null;
             }, 10);
@@ -53,29 +53,29 @@
     // Mobile Menu Toggle
     // ========================================
     if (navToggle) {
-        navToggle.addEventListener('click', function() {
+        navToggle.addEventListener('click', function () {
             navMenu.classList.add('show');
             document.body.style.overflow = 'hidden'; // Prevent body scroll
         });
     }
 
     if (navClose) {
-        navClose.addEventListener('click', function() {
+        navClose.addEventListener('click', function () {
             navMenu.classList.remove('show');
             document.body.style.overflow = ''; // Restore body scroll
         });
     }
 
     // Close menu when clicking on nav links
-    navLinks.forEach(function(link) {
-        link.addEventListener('click', function() {
+    navLinks.forEach(function (link) {
+        link.addEventListener('click', function () {
             navMenu.classList.remove('show');
             document.body.style.overflow = '';
         });
     });
 
     // Close menu when clicking outside
-    navMenu.addEventListener('click', function(e) {
+    navMenu.addEventListener('click', function (e) {
         if (e.target === navMenu) {
             navMenu.classList.remove('show');
             document.body.style.overflow = '';
@@ -85,21 +85,21 @@
     // ========================================
     // Smooth Scrolling for Anchor Links
     // ========================================
-    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
-        anchor.addEventListener('click', function(e) {
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+        anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
-            
+
             // Skip empty anchors
             if (href === '#' || href === '#!') return;
 
             const target = document.querySelector(href);
-            
+
             if (target) {
                 e.preventDefault();
-                
+
                 const headerHeight = header.offsetHeight;
                 const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                
+
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
@@ -111,14 +111,14 @@
     // ========================================
     // Accordion Functionality
     // ========================================
-    accordionHeaders.forEach(function(header) {
-        header.addEventListener('click', function() {
+    accordionHeaders.forEach(function (header) {
+        header.addEventListener('click', function () {
             const item = this.parentElement;
             const content = item.querySelector('.accordion__content');
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
 
             // Close all other accordions (optional - remove if you want multiple open)
-            accordionHeaders.forEach(function(otherHeader) {
+            accordionHeaders.forEach(function (otherHeader) {
                 if (otherHeader !== header) {
                     const otherItem = otherHeader.parentElement;
                     const otherContent = otherItem.querySelector('.accordion__content');
@@ -145,7 +145,7 @@
     // Back to Top Button
     // ========================================
     if (backToTopBtn) {
-        backToTopBtn.addEventListener('click', function(e) {
+        backToTopBtn.addEventListener('click', function (e) {
             e.preventDefault();
             window.scrollTo({
                 top: 0,
@@ -158,18 +158,18 @@
     // Form Validation Enhancement
     // ========================================
     const contactForm = document.querySelector('.form');
-    
+
     if (contactForm) {
         const inputs = contactForm.querySelectorAll('input, textarea');
-        
-        inputs.forEach(function(input) {
+
+        inputs.forEach(function (input) {
             // Real-time validation feedback
-            input.addEventListener('blur', function() {
+            input.addEventListener('blur', function () {
                 validateField(this);
             });
 
             // Remove error state on input
-            input.addEventListener('input', function() {
+            input.addEventListener('input', function () {
                 if (this.classList.contains('form__input--error')) {
                     this.classList.remove('form__input--error');
                 }
@@ -177,10 +177,10 @@
         });
 
         // Form submission validation
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', function (e) {
             let isValid = true;
-            
-            inputs.forEach(function(input) {
+
+            inputs.forEach(function (input) {
                 if (!validateField(input)) {
                     isValid = false;
                 }
@@ -188,13 +188,13 @@
 
             if (!isValid) {
                 e.preventDefault();
-                
+
                 // Scroll to first error
                 const firstError = contactForm.querySelector('.form__input--error');
                 if (firstError) {
                     const headerHeight = header.offsetHeight;
                     const errorPosition = firstError.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
-                    
+
                     window.scrollTo({
                         top: errorPosition,
                         behavior: 'smooth'
@@ -249,13 +249,13 @@
     // ========================================
     // Scroll to Contact Form if There's an Error or Success
     // ========================================
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         const alert = document.querySelector('.alert');
         if (alert) {
-            setTimeout(function() {
+            setTimeout(function () {
                 const headerHeight = header.offsetHeight;
                 const alertPosition = alert.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
-                
+
                 window.scrollTo({
                     top: alertPosition,
                     behavior: 'smooth'
@@ -272,7 +272,7 @@
         const scrollY = window.pageYOffset;
         const headerHeight = header.offsetHeight;
 
-        sections.forEach(function(section) {
+        sections.forEach(function (section) {
             const sectionHeight = section.offsetHeight;
             const sectionTop = section.offsetTop - headerHeight - 100;
             const sectionId = section.getAttribute('id');
@@ -281,7 +281,7 @@
             if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
                 if (navLink) {
                     // Remove active class from all links
-                    navLinks.forEach(function(link) {
+                    navLinks.forEach(function (link) {
                         link.classList.remove('active');
                     });
                     // Add active class to current link
@@ -303,8 +303,8 @@
         threshold: 0.1
     };
 
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
+    const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
             if (entry.isIntersecting) {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
@@ -313,7 +313,7 @@
     }, observerOptions);
 
     // Observe elements with data-aos attribute
-    document.querySelectorAll('[data-aos]').forEach(function(element) {
+    document.querySelectorAll('[data-aos]').forEach(function (element) {
         element.style.opacity = '0';
         element.style.transform = 'translateY(30px)';
         element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
@@ -324,9 +324,9 @@
     // Pricing Card Hover Effects Enhancement
     // ========================================
     const pricingCards = document.querySelectorAll('.pricing-card');
-    
-    pricingCards.forEach(function(card) {
-        card.addEventListener('mouseenter', function() {
+
+    pricingCards.forEach(function (card) {
+        card.addEventListener('mouseenter', function () {
             this.style.transition = 'all 0.3s ease';
         });
     });
@@ -335,7 +335,7 @@
     // Mobile Device Detection for Call Button
     // ========================================
     const mobileCallBtn = document.querySelector('.mobile-call-btn');
-    
+
     if (mobileCallBtn) {
         // Hide call button on desktop if phone can't be called
         if (window.innerWidth > 768 && !('ontouchstart' in window)) {
@@ -349,7 +349,7 @@
     // ========================================
     if ('loading' in HTMLImageElement.prototype) {
         const images = document.querySelectorAll('img[loading="lazy"]');
-        images.forEach(function(img) {
+        images.forEach(function (img) {
             img.src = img.dataset.src || img.src;
         });
     } else {
@@ -363,9 +363,9 @@
     // Handle Window Resize
     // ========================================
     let resizeTimeout;
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(function() {
+        resizeTimeout = setTimeout(function () {
             // Close mobile menu on resize to desktop
             if (window.innerWidth > 992) {
                 navMenu.classList.remove('show');
@@ -373,7 +373,7 @@
             }
 
             // Recalculate accordion heights if open
-            accordionHeaders.forEach(function(header) {
+            accordionHeaders.forEach(function (header) {
                 if (header.getAttribute('aria-expanded') === 'true') {
                     const content = header.parentElement.querySelector('.accordion__content');
                     content.style.maxHeight = content.scrollHeight + 'px';
@@ -385,7 +385,7 @@
     // ========================================
     // Keyboard Navigation Enhancement
     // ========================================
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         // Close mobile menu with Escape key
         if (e.key === 'Escape' && navMenu.classList.contains('show')) {
             navMenu.classList.remove('show');
@@ -403,18 +403,18 @@
     // ========================================
     // Print Optimization
     // ========================================
-    window.addEventListener('beforeprint', function() {
+    window.addEventListener('beforeprint', function () {
         // Expand all accordions for printing
-        accordionHeaders.forEach(function(header) {
+        accordionHeaders.forEach(function (header) {
             header.setAttribute('aria-expanded', 'true');
             const content = header.parentElement.querySelector('.accordion__content');
             content.style.maxHeight = 'none';
         });
     });
 
-    window.addEventListener('afterprint', function() {
+    window.addEventListener('afterprint', function () {
         // Collapse all accordions after printing
-        accordionHeaders.forEach(function(header) {
+        accordionHeaders.forEach(function (header) {
             header.setAttribute('aria-expanded', 'false');
             const content = header.parentElement.querySelector('.accordion__content');
             content.style.maxHeight = null;
@@ -425,13 +425,59 @@
     // Performance Monitoring (Optional - Development Only)
     // ========================================
     if (window.performance && window.performance.timing) {
-        window.addEventListener('load', function() {
-            setTimeout(function() {
+        window.addEventListener('load', function () {
+            setTimeout(function () {
                 const perfData = window.performance.timing;
                 const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
                 console.log('Page Load Time: ' + pageLoadTime + 'ms');
             }, 0);
         });
+    }
+
+    // ========================================
+    // Success Modal Logic
+    // ========================================
+    const successModal = document.getElementById('successModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalConfirm = document.getElementById('modalConfirm');
+    const modalOverlay = document.getElementById('modalOverlay');
+
+    if (successModal) {
+        function closeModal() {
+            successModal.classList.remove('modal--show');
+            successModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        if (modalClose) {
+            modalClose.addEventListener('click', closeModal);
+        }
+
+        if (modalConfirm) {
+            modalConfirm.addEventListener('click', closeModal);
+        }
+
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', closeModal);
+        }
+
+        // Close modal on Escape key
+        window.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && successModal.classList.contains('modal--show')) {
+                closeModal();
+            }
+        });
+
+        // Prevent body scroll if modal is initially shown (from PHP)
+        if (successModal.classList.contains('modal--show')) {
+            document.body.style.overflow = 'hidden';
+
+            // Auto-scroll to top when modal is shown to ensure it's visible
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
     }
 
     // ========================================
