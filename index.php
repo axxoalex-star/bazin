@@ -138,10 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_submit'])) {
         </nav>
     </header>
 
-    <!-- Mobile Call Button -->
-    <a href="tel:+40234567890" class="mobile-call-btn" aria-label="Sună acum">
-        <i class="fas fa-phone-alt"></i>
-    </a>
 
     <!-- Hero Section -->
     <section class="hero" id="hero">
