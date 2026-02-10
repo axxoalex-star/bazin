@@ -955,8 +955,7 @@ endif; ?>
             <div class="footer__content">
                 <div class="footer__section">
                     <h3 class="footer__title">
-                        <i class="fas fa-swimming-pool"></i>
-                        Bazinul de Înot Bacău
+                        <img src="images/logo.png" alt="Bazinul de Înot Bacău" style="height: 50px;">
                     </h3>
                     <p class="footer__description">
                         Complexul tău modern de înot din inima Bacăului. 
